@@ -1,0 +1,112 @@
+## DNS-in-detail
+
+### 1. What is DNS?
+
+DNS (Domain Name System) is the system that translates human-readable domain names (like example.com) into machine-usable IP addresses (like 93.184.216.34).
+Humans are bad at numbers. Computers are bad at names. DNS is the translator that keeps them both from screaming.
+Without DNS, the web as we know it would be a bookmark list of raw IP addresses.
+
+### 2. Why DNS Exists (The Core Problem)
+
+When you type a URL into your browser:
+https://tryhackme.com
+Your computer cannot communicate using that name. It must first discover:
+Which IP address hosts that domain
+Whether IPv4, IPv6, or both are available
+DNS answers that question.
+
+### 3. High-Level DNS Resolution Flow
+
+This is the normal DNS lookup process (simplified but accurate):
+1) Browser Cache
+Checks if it already knows the IP.
+2) Operating System Cache
+The OS keeps a short-term DNS cache.
+3) Recursive Resolver
+Usually provided by your ISP or a public resolver (Google, Cloudflare).
+4) Root DNS Server
+Knows where .com, .org, .net, etc. live.
+5) TLD Server (Top-Level Domain)
+Example: .com servers
+6) Authoritative Name Server
+The server that actually knows the IP for the domain.
+7) Response Returned
+The IP is sent back and cached.
+This hierarchy is intentional. No single server knows everything. That’s a feature, not a flaw.
+### 4. DNS Server Types (Important for Security)
+4.1 Recursive Resolver
+Acts on behalf of the client
+Does all the heavy lifting
+Examples:
+ISP DNS
+8.8.8.8 (Google)
+1.1.1.1 (Cloudflare)
+Security note:
+If this resolver is compromised, users can be redirected anywhere.
+
+4.2 Root Name Servers
+There are 13 logical root servers (A–M)
+Distributed globally using Anycast
+They do not know IP addresses
+They only know where TLD servers are
+
+4.3 TLD Servers
+Handle domains like:
+.com
+.org
+.net
+.io
+They point to the authoritative servers for each domain.
+
+4.4 Authoritative Name Servers
+Final source of truth
+Store DNS records for domains
+Controlled by:
+Hosting providers
+Cloud DNS services
+Organization infrastructure
+If attackers gain access here, DNS hijacking becomes trivial.
+
+### 5. Common DNS Record Types
+A Record
+Maps a domain to an IPv4 address.
+example.com → 93.184.216.34
+
+AAAA Record
+Maps a domain to an IPv6 address.
+
+CNAME Record
+Creates an alias.
+www.example.com → example.com
+Security note:
+CNAME chains can be abused for subdomain takeovers.
+
+MX Record
+Specifies mail servers.
+example.com → mail.example.com
+Attackers often target MX records for phishing setups.
+NS Record
+Defines authoritative name servers for a domain.
+
+TXT Record
+Stores arbitrary text.
+Common uses:
+SPF
+DKIM
+DMARC
+Domain verification
+TXT records are often goldmines during recon.
+
+### 6. DNS Caching & TTL
+
+DNS responses are cached to reduce load and latency.
+TTL (Time To Live) defines how long a record stays cached.
+Short TTL → faster updates, more queries
+Long TTL → slower changes, better performance
+### 7. Why DNS Matters in Web Security
+Every web request starts with DNS.
+If DNS lies:
+HTTPS doesn’t matter (users may never reach the real site)
+Firewalls don’t matter
+Applications don’t matter
+Control DNS, and you control the front door of the internet.
