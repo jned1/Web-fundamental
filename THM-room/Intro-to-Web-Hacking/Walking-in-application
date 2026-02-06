@@ -1,0 +1,100 @@
+# Walking an Application  
+**TryHackMe – Introduction to Web Hacking**
+
+## Introduction
+
+“Walking an application” means carefully exploring a web application the same way a normal user would, before attempting to break or exploit anything. This phase is about observation, not action. The goal is to understand what the application is, what it does, and how it behaves under normal conditions.
+
+In web hacking, this step is critical because every vulnerability exists inside a context. Attacking without understanding that context often leads to confusion, missed attack surfaces, or incorrect assumptions. Walking the application builds a mental map that later guides testing and exploitation.
+
+This room reinforced a simple idea: web hacking starts with patience and curiosity, not payloads.
+
+---
+
+## Understanding the Target Application
+
+The first step is to behave like a legitimate user. That means loading pages normally, clicking links, submitting forms as intended, and reading what the application tells you.
+
+Page content often reveals more than expected. Text, error messages, help sections, and UI hints can expose how the application is structured and what the developers assumed users would do. Links show how pages connect. Forms reveal what kind of data the application expects.
+
+Another important part is identifying the purpose of the application. Is it a blog, a login portal, an admin panel, or a dashboard? Along with that comes user roles. Some users may only view content, while others may create, edit, or manage data. Understanding these roles helps later when thinking about access control and privilege boundaries.
+
+---
+
+## URL and Page Structure
+
+URLs are not just addresses; they are clues. Paths and parameters often reflect how the server processes requests.
+
+A URL path may suggest different sections of the application, such as public pages versus restricted areas. Query parameters can indicate dynamic behavior, like loading a specific item or performing a search. When parameters are predictable or easy to guess, attackers pay attention because it may lead to unintended access.
+
+Predictable URLs matter because many applications rely on hiding functionality rather than properly restricting it. If a page exists and the server does not enforce access control, simply knowing the URL might be enough to reach it.
+
+Walking the application helps reveal patterns in how URLs are formed and used.
+
+---
+
+## Client-Side Components
+
+The client side is everything the browser receives and renders. This includes HTML structure, forms, inputs, buttons, links, and sometimes hidden fields.
+
+HTML structure shows how the page is organized and what elements are present, even if they are not visible. Forms are especially important because they define how user input is sent to the server. Input names often match server-side variables, which becomes useful later during testing.
+
+Hidden fields are a common point of confusion for beginners. They are hidden from the user interface, not from the user. Anyone can view or modify them using the browser. This is why client-side elements are never security controls. They exist for usability and convenience, not protection.
+
+The server must always be responsible for enforcing security rules.
+
+---
+
+## Developer Tools (Browser DevTools)
+
+Browser Developer Tools are one of the most powerful resources for understanding a web application. They are built into the browser and require no extra software.
+
+Inspect Element allows viewing and modifying the live HTML and CSS. This helps reveal hidden elements, disabled inputs, or conditional content.
+
+View Source shows the raw HTML as delivered by the server. This can include comments, unused code, or references that are not obvious in the rendered page.
+
+The Network tab shows requests and responses between the browser and the server. This is where the application truly reveals itself. Request methods, parameters, headers, and server responses can all be observed in real time.
+
+Attackers rely heavily on DevTools because it exposes how the application actually communicates, not just how it looks.
+
+---
+
+## HTTP Observations
+
+Walking an application naturally introduces basic HTTP behavior. GET and POST requests appear frequently and serve different purposes. GET is commonly used for retrieving data and often includes parameters in the URL. POST is usually used for submitting data, such as login forms.
+
+Parameters are the data sent to the server, while headers provide metadata about the request. Observing these helps build an understanding of how the application expects input.
+
+Cookies and sessions appear once authentication or state tracking is involved. At a high level, cookies allow the server to recognize the client across multiple requests. Understanding that sessions exist, and that they are managed through HTTP, is essential before learning how they can fail.
+
+At this stage, the focus is awareness, not exploitation.
+
+---
+
+## Common Mistakes Beginners Make
+
+A frequent mistake is rushing into attacks without understanding the application. This often leads to random testing with no clear goal.
+
+Another mistake is ignoring normal functionality. Features that seem boring or obvious are often where logic flaws hide.
+
+Trusting front-end validation is also a common error. Just because a form restricts input in the browser does not mean the server enforces the same rules.
+
+Walking the application helps avoid these mistakes by grounding testing in understanding rather than assumptions.
+
+---
+
+## Security Mindset Takeaways
+
+Walking an application trains the mindset of thinking like both a user and an attacker. A user explores features to get things done. An attacker explores features to see how they can be misused.
+
+Before touching any tools beyond the browser, the application should be mapped mentally. Pages, roles, inputs, and behaviors should feel familiar.
+
+Enumeration always comes before exploitation because vulnerabilities are easier to spot when the system is understood. Walking the application is the foundation of that enumeration process.
+
+---
+
+## Summary: Where This Fits in Web Hacking
+
+Walking an application is an early but essential phase in the web hacking lifecycle. It sits after initial discovery and before active testing. This phase transforms an unknown website into a known system with structure, logic, and patterns.
+
+Without this step, exploitation becomes guesswork. With it, testing becomes intentional, focused, and far more effective.
