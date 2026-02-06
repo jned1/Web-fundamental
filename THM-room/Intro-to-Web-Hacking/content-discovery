@@ -1,0 +1,100 @@
+# Content Discovery  
+**TryHackMe – Introduction to Web Hacking**
+
+## Introduction
+
+Content discovery is the process of finding pages, files, and endpoints that exist on a web application but are not immediately visible through normal navigation. These resources may not appear in menus or links, yet they are still accessible if the correct path is requested.
+
+Hidden content exists on real applications for many reasons. Developers may leave unfinished features, backup files, testing endpoints, or old pages behind. Sometimes content is hidden simply because it is not meant for regular users, not because it is properly secured.
+
+From a security perspective, content discovery always comes before exploitation. It expands the view of what the application actually exposes. Attacking without knowing what exists is like trying to break into a building without knowing how many doors it has.
+
+---
+
+## Types of Discoverable Content
+
+Hidden directories and files are common. These may include folders that store uploads, configuration files, or internal functionality that was never meant to be public.
+
+Backup files and misconfigurations often appear when developers save copies of files or move things around during development. These files may expose source code or sensitive information if they are accessible through the web server.
+
+Admin or development endpoints are another frequent target. Applications often have separate areas for administration, testing, or debugging. If access control is weak or missing, discovering these endpoints can be critical.
+
+Legacy or forgotten pages come from older versions of the application. As features change, old files may remain on the server even though they are no longer linked. These pages may lack modern security protections.
+
+---
+
+## Manual Content Discovery
+
+Manual discovery starts with careful observation. URLs should be read closely, as patterns often reveal how content is organized. A single visible page can hint at the existence of many others.
+
+Navigating links and forms helps reveal how users are expected to move through the application. Each link shows a deliberate path chosen by the developer, which can suggest additional unlinked paths.
+
+Files like `robots.txt` and sitemap documents are designed to guide search engines, not attackers. However, they often list locations the developer considered important or sensitive. Reading them is a form of passive discovery.
+
+The browser itself is the first and most important tool. Viewing page source, inspecting elements, and observing network requests all help uncover clues without sending unexpected input to the server.
+
+---
+
+## Automated Content Discovery (Conceptual)
+
+Automation becomes necessary because manual exploration does not scale. Large applications can have hundreds or thousands of possible paths, far beyond what a human can reasonably guess.
+
+Automated discovery relies on wordlists, which are collections of common directory and file names. Tools combine these words with the target URL to see which paths exist. Conceptually, this is structured guessing based on known patterns.
+
+Automation is powerful but limited. It can miss custom or unusual paths, and it can generate misleading results due to server behavior. A tool only reports what it sees, not what it means.
+
+Human thinking is still required to interpret results. Understanding why a response appears, or whether it matters, is more important than the number of paths found.
+
+---
+
+## File and Extension Awareness
+
+Different web technologies rely on different file types. Some applications use script-based files, others rely on static content, and some mix both approaches.
+
+File extensions can reveal what technology is used on the server. This information may suggest how the application processes requests and where weaknesses could exist.
+
+Extensions also leak implementation details. Even if a page looks the same in the browser, the underlying file type can influence how input is handled or how errors occur.
+
+Being aware of extensions helps frame expectations about how the application was built.
+
+---
+
+## HTTP Responses and Status Codes
+
+HTTP status codes are a key signal during content discovery. A successful response indicates that a resource exists and is accessible. Redirects suggest that content exists but is being rerouted elsewhere.
+
+Access-denied responses show that a resource exists but is restricted. This is still valuable information, as it confirms the presence of functionality.
+
+Not-found responses usually mean a resource does not exist, but this is not always true. Some servers deliberately return misleading responses to hide content.
+
+False negatives happen when an existing resource behaves like a missing one. Observing response size, headers, and behavior helps distinguish real absence from intentional masking.
+
+---
+
+## Common Beginner Mistakes
+
+A common mistake is trusting `robots.txt` as a security mechanism. It was never designed to protect content, only to guide automated indexing.
+
+Another mistake is assuming that content not linked in the interface cannot be accessed. Links are a design choice, not a security boundary.
+
+Ignoring response behavior is also problematic. Two responses with the same status code can still mean very different things.
+
+Running automated tools without understanding their output leads to noise instead of insight. Discovery is about interpretation, not volume.
+
+---
+
+## Security Mindset Takeaways
+
+Content discovery requires thinking like a developer who forgot something or assumed nobody would look there. That assumption is often wrong.
+
+The goal is to map the application’s surface area. Each discovered resource adds to the understanding of what the server exposes to the internet.
+
+As visibility increases, so does the potential attack surface. Content discovery does not break anything by itself, but it reveals where breaking might be possible.
+
+---
+
+## Summary: Content Discovery in the Web Hacking Lifecycle
+
+Content discovery is an early and foundational phase in web hacking and bug bounty workflows. It sits between basic reconnaissance and active vulnerability testing.
+
+By revealing hidden and forgotten parts of an application, it transforms a simple website into a complex system with many possible entry points. Without content discovery, later testing is incomplete. With it, exploitation becomes targeted, informed, and far more effective.
