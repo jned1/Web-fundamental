@@ -1,0 +1,106 @@
+# Authentication Bypass  
+**TryHackMe – Introduction to Web Hacking**
+
+## Introduction
+
+Authentication is the process of verifying who a user is. In web applications, this usually means checking credentials such as a username and password before granting access to protected functionality.
+
+Authentication is often confused with authorization. Authentication answers the question “Who are you?”, while authorization answers “What are you allowed to do?”. Both are related, but they solve different problems. A user must usually be authenticated before authorization decisions make sense.
+
+From an attacker’s perspective, authentication is a high-value target. If authentication can be bypassed, the attacker no longer needs to break individual features. They gain access as if they were a legitimate user, sometimes even as an administrator.
+
+---
+
+## How Authentication Normally Works
+
+Most web applications start authentication with a login form. The browser collects credentials from the user and sends them to the server inside an HTTP request.
+
+The server is responsible for verifying those credentials. This usually involves checking stored data, such as a database record, and deciding whether the provided input matches what is expected.
+
+If authentication succeeds, the server creates a session. A session identifier is sent back to the browser, commonly through a cookie. On later requests, this identifier allows the server to recognize the user without asking for credentials again.
+
+The key point is that authentication is not a single action. It is a process that starts with credentials and continues with session handling on every request.
+
+---
+
+## Trust Boundaries in Authentication
+
+The browser and the server live on opposite sides of a trust boundary. The client controls what data is sent, how requests are formed, and what client-side code executes.
+
+The server controls verification, decision-making, and access enforcement. It must assume that anything coming from the client can be manipulated.
+
+Authentication bypass vulnerabilities often appear when this boundary is misunderstood. Developers may assume that certain requests only happen after a login, or that certain values cannot be changed by users. Attackers rely on these assumptions being wrong.
+
+---
+
+## Common Categories of Authentication Bypass
+
+One category of bypass comes from logic flaws in login checks. The application may perform checks in the wrong order or fail to handle unexpected states correctly.
+
+Another category involves direct access to protected pages. If the server does not verify authentication on every request, users may reach restricted functionality simply by requesting the right URL.
+
+Poor session handling is also a common issue. If sessions are not properly created, validated, or invalidated, the server may treat unauthenticated users as authenticated ones.
+
+Misconfigured authentication workflows can create gaps. Features like password resets, remember-me functionality, or multi-step logins often introduce additional complexity that can be misused if not carefully designed.
+
+---
+
+## Client-Side vs Server-Side Validation
+
+Client-side validation exists to improve usability. It helps users submit forms correctly and reduces unnecessary server requests.
+
+From a security standpoint, client-side validation provides no real protection. Any logic running in the browser can be bypassed, modified, or removed entirely.
+
+Authentication bypasses occur when validation or checks are performed only on the client side. If the server assumes the browser has already enforced rules, it opens the door to unauthorized access.
+
+Secure authentication depends on server-side validation for every relevant request.
+
+---
+
+## Session and Cookie Mismanagement (High-Level)
+
+Sessions allow the server to remember authentication state across requests. Each request must be checked to confirm that the session is valid and authorized.
+
+If session checks are missing or inconsistent, protected functionality may be reachable without proper authentication. If sessions are predictable or reused, attackers may be able to impersonate users.
+
+Authentication is not finished after login. Session handling is part of authentication, and weaknesses here are often easier to exploit than breaking credential checks.
+
+---
+
+## Error Handling and Information Disclosure
+
+Error messages are part of the authentication experience, but they also reveal information. Messages that clearly distinguish between invalid usernames and invalid passwords reduce uncertainty for attackers.
+
+Verbose errors can expose internal logic, such as which checks failed or which conditions were evaluated. Even small differences in responses can guide an attacker’s understanding of the system.
+
+From a defensive perspective, authentication errors should reveal as little as possible while still being useful to legitimate users.
+
+---
+
+## Common Beginner Misunderstandings
+
+Hiding a page or link does not secure it. If the server does not enforce authentication, the page is still accessible.
+
+Disabled buttons or blocked UI elements only affect appearance. They do not prevent requests from being sent.
+
+Another misunderstanding is equating visible behavior with actual security logic. What the interface shows is not necessarily what the server enforces.
+
+Authentication bypass vulnerabilities often exist because of this gap between appearance and behavior.
+
+---
+
+## Security Mindset Takeaways
+
+Authentication bypass testing is about logic, not guessing passwords. The focus is on how the application decides whether a user is logged in.
+
+Following authentication state across requests is essential. Each request should be examined in terms of what the server assumes about the user.
+
+Many authentication bypasses require no special tools. They rely on understanding flows, trust boundaries, and assumptions rather than technical tricks.
+
+---
+
+## Summary
+
+Understanding authentication bypass lays the foundation for deeper testing of authorization, session management, and access control. Authentication defines who the user is, and any weakness here affects everything built on top of it.
+
+By learning how logical mistakes lead to bypasses, it becomes easier to reason about why access control failures occur and how seemingly small design decisions can compromise an entire application.
