@@ -1,0 +1,111 @@
+# Subdomain Enumeration  
+**TryHackMe – Introduction to Web Hacking**
+
+## Introduction
+
+Subdomain enumeration is the process of discovering subdomains that exist under a main domain. If `example.com` is the primary domain, then `api.example.com`, `admin.example.com`, or `dev.example.com` are subdomains.
+
+Large organizations almost always expose many subdomains. This happens because modern companies run many services at the same time: APIs, mobile backends, internal dashboards, testing environments, and legacy systems. Each service often ends up on its own subdomain for convenience and separation.
+
+From a security and bug bounty perspective, subdomains matter because every subdomain is effectively a new entry point. Even if the main website is well secured, a forgotten or poorly maintained subdomain can become the weakest link.
+
+---
+
+## DNS Fundamentals (Quick Review)
+
+A domain is the main name registered by an organization, such as `example.com`. A subdomain is a child of that domain, placed to the left, like `shop.example.com` or `login.example.com`.
+
+When a browser tries to access a subdomain, DNS is responsible for resolving it into an IP address. The DNS system does not treat subdomains as special; they are resolved using the same lookup process as any other hostname.
+
+Several DNS record types are commonly involved.  
+An `A` record maps a subdomain directly to an IPv4 address.  
+A `CNAME` record points one subdomain to another domain name, often used for cloud services.  
+A `TXT` record stores text data and is frequently used for verification, email security, or ownership proof.
+
+Understanding these records helps explain why some subdomains point to unexpected infrastructure.
+
+---
+
+## Why Subdomains Matter in Web Hacking
+
+Subdomains often reflect organizational structure. Different teams may own different subdomains, and not all teams follow the same security standards.
+
+Staging and development environments are especially common targets. These systems may run older code, weaker authentication, or debugging features that were never meant for public access.
+
+Subdomains can also bypass defenses applied only to the main site. A web application firewall, strict headers, or rate limiting might protect `www.example.com` but not `api.example.com` or `old.example.com`. From an attacker’s perspective, subdomains are opportunities to reach the same organization through less protected doors.
+
+---
+
+## Passive Subdomain Enumeration (Conceptual)
+
+Passive subdomain enumeration means collecting subdomain information without directly interacting with the target’s infrastructure in a noticeable way.
+
+This relies on public data sources that already contain information about the domain. Search engines, public DNS datasets, archived pages, and certificate records often list subdomains that have existed at some point.
+
+Passive methods are considered stealthy because they do not send traffic to the target itself. They are also safe in scope-limited environments like bug bounty programs, since they rely on third-party data rather than active probing.
+
+The limitation is that passive data is incomplete. If a subdomain was never indexed or publicly logged, it will not appear in these sources.
+
+---
+
+## Active Subdomain Enumeration (Conceptual)
+
+Active subdomain enumeration involves directly asking DNS servers whether specific subdomains exist. This usually means generating many possible names and checking how the server responds.
+
+Brute forcing with wordlists is based on common naming patterns such as `dev`, `test`, `api`, or `admin`. The idea is not guessing randomly, but leveraging predictable human habits.
+
+DNS behavior matters here. Some domains use wildcard DNS, which responds to any subdomain request, even if it does not actually exist. This can create false positives and requires careful interpretation.
+
+Active methods provide better coverage than passive ones, but they generate noise and require more analysis to separate real findings from misleading responses.
+
+---
+
+## Certificate Transparency (CT) Logs
+
+Certificate Transparency logs exist to improve trust in HTTPS. They record every publicly issued TLS certificate so that misissued or malicious certificates can be detected.
+
+These logs are extremely useful for subdomain enumeration because certificates often include multiple subdomains in their names. When an organization enables HTTPS on a subdomain, that name may end up permanently recorded in CT logs.
+
+CT-based discovery is powerful because it reveals subdomains that were meant to be accessed securely, including internal tools or temporary environments. Even if the subdomain is no longer active, its existence can still be learned from historical certificates.
+
+This turns a security transparency feature into a valuable reconnaissance source.
+
+---
+
+## Subdomain Validation and Relevance
+
+Not every discovered subdomain is useful. Some may no longer resolve, others may point to parked services, and some may return generic responses.
+
+Validation is about understanding behavior. Does the subdomain respond over HTTP or HTTPS? Does it redirect somewhere else? Does it show a unique application or a default page?
+
+Relevance comes from context. A login panel, an API endpoint, or a staging dashboard is usually more interesting than a static marketing page. Subdomain enumeration is not about quantity, but about identifying which assets are worth deeper testing.
+
+---
+
+## Common Beginner Mistakes
+
+One common mistake is assuming that every subdomain is exploitable. Many are well secured or intentionally exposed with limited functionality.
+
+Another mistake is ignoring differences between HTTP and HTTPS. Some subdomains behave very differently depending on the protocol, which can affect security assumptions.
+
+Virtual hosting is also often overlooked. Multiple subdomains can point to the same IP address but serve completely different applications based on the hostname.
+
+Finally, treating tools as magic boxes leads to shallow understanding. Tools help collect data, but they do not explain why a subdomain matters.
+
+---
+
+## Security Mindset Takeaways
+
+Subdomain enumeration is about expanding scope intelligently, not blindly. Each new subdomain represents a decision made by an organization, often under time pressure or convenience.
+
+Thinking like an organization with many teams helps explain why inconsistencies appear. Security gaps often form at the boundaries between systems and responsibilities.
+
+Many high-impact bugs come from these boundaries. Subdomain enumeration is often the step that reveals them.
+
+---
+
+## Summary: Subdomain Enumeration in the Web Hacking Lifecycle
+
+Subdomain enumeration sits early in the web hacking and bug bounty lifecycle, after basic reconnaissance and before deep vulnerability testing. It expands the visible attack surface beyond the main website.
+
+By uncovering forgotten, misconfigured, or lightly protected services, it often leads directly to meaningful findings. Without subdomain enumeration, testing remains narrow. With it, the full complexity of a real-world target becomes visible.
